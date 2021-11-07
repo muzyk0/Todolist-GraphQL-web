@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useLayoutEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { setAccessToken } from "./accessToken";
+import { Layout } from "./components/Layout/Layout";
+import { RoutesContainer } from "./Routes";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const App: React.FC = () => {
+    const [loading, setLoadint] = useState(true);
 
-export default App;
+    useLayoutEffect(() => {
+        fetch("http://localhost:5000/refresh_token", {
+            method: "POST",
+            credentials: "include",
+        }).then(async (req) => {
+            const { accessToken } = await req.json();
+            setAccessToken(accessToken);
+            setLoadint(false);
+        });
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+        <BrowserRouter>
+            <Layout>
+                <RoutesContainer />
+            </Layout>
+        </BrowserRouter>
+    );
+};
