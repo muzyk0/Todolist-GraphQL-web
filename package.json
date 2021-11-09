@@ -1,5 +1,6 @@
 {
     "name": "todolist-graphql-web",
+    "author": "muzyk0",
     "version": "0.1.0",
     "private": true,
     "description": "Todolist GraphQL web",
